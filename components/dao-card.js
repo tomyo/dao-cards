@@ -25,11 +25,9 @@ customElements.define(
           <slot name="title"></slot>
           <slot name="description"></slot>
         </div>
-        <a href="#${this.id}">
-          <slot>
-            <!-- image expected into default slot -->
-          </slot>
-        </a>
+        <slot>
+          <!-- image expected into default slot -->
+        </slot>
 
         <style>
           :host {

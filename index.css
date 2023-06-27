@@ -31,7 +31,7 @@ dao-card.missing-img {
   display: none;
 }
 
-dao-card>img {
+dao-card, dao-card>img {
   border-radius: 20px;
 }
 
