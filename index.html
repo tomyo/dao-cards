@@ -43,11 +43,13 @@
     const suits = form.querySelectorAll('input[name="suit"]');
 
     suits.forEach(suit => {
-      suit.addEventListener('change', () => {
+      suit.addEventListener('click', (e) => {
+        // Clean other checked inputs (only one suit can be checked at a time)
         const checked = form.querySelectorAll('input[name="suit"]:checked');
-        const checkedSuits = Array.from(checked).map(checkbox => checkbox.value);
+        checked.forEach((input) => input.checked = input === e.target ? true : false)
+
         form.querySelectorAll('dao-card').forEach(card => {
-          if (checkedSuits.includes(card.dataset.suit) || checkedSuits.length === 0) {
+          if (e.target.value == card.dataset.suit || e.target.checked == false) {
             card.classList.remove('hidden');
           } else {
             card.classList.add('hidden');
