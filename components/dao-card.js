@@ -73,7 +73,7 @@ customElements.define(
     addEventListeners() {
       this.handlers = [
         [
-          // Hide missing cards
+          // Hide cards when image fails to load
           this.querySelector("img"),
           "error",
           (e) => {
