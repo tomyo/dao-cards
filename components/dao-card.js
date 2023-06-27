@@ -77,7 +77,6 @@ customElements.define(
           this.querySelector("img"),
           "error",
           (e) => {
-            console.log("error", e);
             this.classList.add("missing-img");
           },
         ],
