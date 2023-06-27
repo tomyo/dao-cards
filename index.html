@@ -258,3 +258,15 @@
     </dao-card>
   </snap-carousel>
 </form>
+
+
+<script>
+  // Once DOM loaded, remove loading="lazy" from card images to prevent them from loading on scroll
+  document.addEventListener("DOMContentLoaded", function () {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    images.forEach(image => {
+      image.removeAttribute('loading');
+    });
+  });
+
+</script>
