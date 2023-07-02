@@ -18,6 +18,13 @@ main {
   margin-inline: auto;
 }
 
+body > .title {
+  text-align: center;
+  margin-block-start: 5rem;
+  margin-block-end: 0;
+}
+
+
 /* Titles */
 #carousels .title {
   text-align: center;
@@ -125,5 +132,5 @@ dao-card:fullscreen.show-info::part(card)::after {
 
 /* More info */
 #moreInfo {
-  margin-block-start: 3em;
+  margin-block-start: 3rem;
 }
