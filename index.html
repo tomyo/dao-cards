@@ -253,13 +253,58 @@
     });
   });
 
-  window.addEventListener('hashchange', async (e) => {
-    if (document.fullscreenElement) {
-      await document.exitFullscreen();
-    }
+  window.addEventListener('hashchange', (e) => {
+    if (!document.fullscreenElement) return;
 
     const oldHash = decodeURI(new URL(e.oldURL).hash);
     const newHash = decodeURI(new URL(e.newURL).hash);
+
     console.debug(`hash changed ${oldHash} -> ${newHash}`);
+    if (!newHash) {
+      return e.preventDefault();
+    }
+
+    const target = document.querySelector(newHash);
+
+    if (document.fullscreenElement != target) {
+      document.exitFullscreen();
+    } else {
+      target.shadowRoot.querySelector('a').href = "#";
+    }
+
+  });
+
+
+  window.addEventListener('fullscreenchange', (e) => {
+    if (!document.fullscreenElement) {
+      rotateElement = (x, y) => { };
+      return;
+    }
+
+    rotateElement = (x, y) => {
+      const card = document.fullscreenElement.shadowRoot.querySelector(".card");
+      card.style.transform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
+      card.style.webkitTransform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
+    }
+  });
+
+
+  let rotateElement = (x, y) => { };
+
+  window.addEventListener('deviceorientation', function (event) {
+    if (!document.fullscreenElement) return;
+
+    if (screen.orientation.angle == 90)
+      return rotateElement(55 + event.gamma, event.beta);
+
+    rotateElement(55 - event.beta, event.gamma);
+
+  });
+
+  window.addEventListener('mousemove', function (e) {
+    if (!document.fullscreenElement) return;
+
+    rotateElement(-((45 * (e.y - window.innerHeight / 2)) / window.innerHeight / 2),
+      (45 * (e.x - window.innerWidth / 2)) / window.innerWidth / 2);
   });
 </script>

@@ -21,27 +21,64 @@ customElements.define(
 
     renderShadow() {
       this.shadowRoot.innerHTML = /*html*/ `
-        <div class="single-view-wrapper">
-          <a href="#${this.id}">
-            <div class="content">
-              <slot name="title"></slot>
-              <slot name="description"></slot>
+        <div class="card-wrapper">
+          <a href="#${this.id}" class="card" part="card">
+            <div class="content border" part="content">
+              <header>
+                <slot name="title"></slot>
+                <slot name="description"></slot>
+              </header>
             </div>
             <slot>
               <!-- image expected into default slot -->
             </slot>
           </a>
         </div>
+
         <style>
+          .card-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            perspective: 400px;
+          }
+
+          .card {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+          }
+
+          .card header {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            perspective: 400px;
+            transform-style: preserve-3d;
+            width: 80%;
+          }
+
+          .border {
+            transform: translateZ(50px);
+            transform-style: preserve-3d;
+          }
+
           :host {
             position: relative;
           }
 
           .content {
+            display: none;
             --padding: 7%;
             max-height: calc(100% - var(--padding) - 1%);
             overflow-y: auto;
             padding: var(--padding);
+            position: absolute;
+            inset: 0;
           }
 
           ::slotted(img) {
@@ -49,25 +86,26 @@ customElements.define(
             object-fit: cover;
           }
 
-          :host .content {
-            display: none;
-            z-index: 1;
-            position: relative;
-          }
 
-          .single-view-wrapper {
+          .card-wrapper {
             display: contents;
             --direction: row;
           }
 
 
           @media (orientation: portrait) {
-            .single-view-wrapper {
+            .card-wrapper {
               --direction: column;
+              width: 70%;
             }
           }
 
           @media (orientation: landscape) {
+            .card-wrapper {
+              --direction: column;
+              height: 75%;
+            }
+
             :host(:fullscreen) a {
               flex-basis: 100%;
             }
@@ -82,11 +120,10 @@ customElements.define(
             margin: auto;
           }
 
-          :host(:fullscreen) .single-view-wrapper {
+          :host(:fullscreen) .card-wrapper {
             display: flex;
             flex-direction: var(--direction);
             place-content: center;
-            height: 100%;
           }
 
 
@@ -99,6 +136,9 @@ customElements.define(
     }
 
     addEventListeners() {
+      let toggled = false;
+      const a = this.shadowRoot.querySelector("a");
+
       this.handlers = [
         [
           // Hide cards when image fails to load
@@ -112,7 +152,20 @@ customElements.define(
           this,
           "click",
           (e) => {
-            this.requestFullscreen();
+            if (!document.fullscreenElement) {
+              this.requestFullscreen();
+              e.preventDefault(); // Avoid hash change
+              return;
+            }
+
+            const href = a.getAttribute("href");
+
+            if (toggled) {
+              a.href = href == "#" ? `#${this.id}` : "#";
+              history.replaceState(null, null, a.href);
+            }
+
+            if (href == "#") toggled = true;
           },
         ],
       ];
