@@ -72,11 +72,11 @@ dao-card:fullscreen {
   padding: 5%;
 }
 
-dao-card:target::part(content) {
+dao-card.show-info::part(content) {
   display: block;
 }
 
-dao-card:target::part(card)::after {
+dao-card.show-info::part(card)::after {
   display: block;
   content: "";
   position: absolute;

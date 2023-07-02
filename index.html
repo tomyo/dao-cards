@@ -261,6 +261,7 @@
 
     console.debug(`hash changed ${oldHash} -> ${newHash}`);
     if (!newHash) {
+      document.exitFullscreen();
       return e.preventDefault();
     }
 
@@ -268,8 +269,6 @@
 
     if (document.fullscreenElement != target) {
       document.exitFullscreen();
-    } else {
-      target.shadowRoot.querySelector('a').href = "#";
     }
 
   });

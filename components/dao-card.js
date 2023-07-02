@@ -153,10 +153,9 @@ customElements.define(
           "click",
           (e) => {
             if (!document.fullscreenElement) {
-              this.requestFullscreen();
-              e.preventDefault(); // Avoid hash change
-              return;
+              return this.requestFullscreen();
             }
+            this.classList.toggle("show-info");
 
             const href = a.getAttribute("href");
 
