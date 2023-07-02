@@ -24,42 +24,14 @@
   <p>Suits = required elements of any governance design project</p>
   <ul>
     <li>Strategy</li>
+    <li>Incentive</li>
     <li>Consensus</li>
-    <li>Coordination</li>
     <li>Coordination</li>
   </ul>
 </main>
 
-<form id="dao-cards">
-  <fieldset id="filters">
-    <legend>Filter by</legend>
-    <label><input type="checkbox" name="suit" value="♠"><span>♠</span></label>
-    <label><input type="checkbox" name="suit" value="♥"><span>♥</span></label>
-    <label><input type="checkbox" name="suit" value="♦"><span>♦</span></label>
-    <label><input type="checkbox" name="suit" value="♣"><span>♣</span></label>
-  </fieldset>
-
-  <script>
-    const form = document.getElementById('dao-cards');
-    const suits = form.querySelectorAll('input[name="suit"]');
-
-    suits.forEach(suit => {
-      suit.addEventListener('click', (e) => {
-        // Clean other checked inputs (only one suit can be checked at a time)
-        const checked = form.querySelectorAll('input[name="suit"]:checked');
-        checked.forEach((input) => input.checked = input === e.target ? true : false)
-
-        form.querySelectorAll('dao-card').forEach(card => {
-          if (e.target.value == card.dataset.suit || e.target.checked == false) {
-            card.classList.remove('hidden');
-          } else {
-            card.classList.add('hidden');
-          }
-        });
-      });
-    });
-  </script>
-
+<section id="carousels">
+  <h3 class="title">Strategy</h3>
   <snap-carousel id="cards">
     <dao-card id="🂡" data-suit="♠" tabindex="0">
       <img src="/assets/images/cards/🂡.png" loading="lazy">
@@ -108,6 +80,11 @@
     <dao-card id="🂮" data-suit="♠" tabindex="0">
       <img src="/assets/images/cards/🂮.png" loading="lazy">
     </dao-card>
+
+  </snap-carousel>
+
+  <h3 class="title">Incentive</h3>
+  <snap-carousel>
     <dao-card id="🂱" data-suit="♥" tabindex="0">
       <img src="/assets/images/cards/🂱.png" loading="lazy">
     </dao-card>
@@ -153,6 +130,10 @@
     <dao-card id="🂾" data-suit="♥" tabindex="0">
       <img src="/assets/images/cards/🂾.png" loading="lazy">
     </dao-card>
+  </snap-carousel>
+
+  <h3 class="title">Consensus</h3>
+  <snap-carousel>
     <dao-card id="🃁" data-suit="♦" tabindex="0">
       <img src="/assets/images/cards/🃁.png" loading="lazy">
     </dao-card>
@@ -202,6 +183,10 @@
     <dao-card id="🃎" data-suit="♦" tabindex="0">
       <img src="/assets/images/cards/🃎.png" loading="lazy">
     </dao-card>
+  </snap-carousel>
+
+  <h3 class="title">Coordination</h3>
+  <snap-carousel>
     <dao-card id="🃑" data-suit="♣" tabindex="0">
       <img src="/assets/images/cards/🃑.png" loading="lazy">
     </dao-card>
@@ -257,8 +242,7 @@
       <img src="/assets/images/cards/🃞.png" loading="lazy">
     </dao-card>
   </snap-carousel>
-</form>
-
+</section>
 
 <script>
   // Once DOM loaded, remove loading="lazy" from card images to prevent them from loading on scroll
@@ -269,4 +253,13 @@
     });
   });
 
+  window.addEventListener('hashchange', async (e) => {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    }
+
+    const oldHash = decodeURI(new URL(e.oldURL).hash);
+    const newHash = decodeURI(new URL(e.newURL).hash);
+    console.debug(`hash changed ${oldHash} -> ${newHash}`);
+  });
 </script>

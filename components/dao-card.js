@@ -21,29 +21,32 @@ customElements.define(
 
     renderShadow() {
       this.shadowRoot.innerHTML = /*html*/ `
-        <div class="content">
-          <slot name="title"></slot>
-          <slot name="description"></slot>
+        <div class="single-view-wrapper">
+          <a href="#${this.id}">
+            <div class="content">
+              <slot name="title"></slot>
+              <slot name="description"></slot>
+            </div>
+            <slot>
+              <!-- image expected into default slot -->
+            </slot>
+          </a>
         </div>
-        <slot>
-          <!-- image expected into default slot -->
-        </slot>
-
         <style>
           :host {
             position: relative;
           }
 
           .content {
-            max-height: 100%;
+            --padding: 7%;
+            max-height: calc(100% - var(--padding) - 1%);
             overflow-y: auto;
-            padding: 6%;
+            padding: var(--padding);
           }
 
           ::slotted(img) {
             height: 100%;
             object-fit: cover;
-            width: 100%;
           }
 
           :host .content {
@@ -52,17 +55,44 @@ customElements.define(
             position: relative;
           }
 
-          :host(:target) .content, :host(:hover) .content, :host(:focus) .content {
-            display: block;
-            margin-inline: 1em;
+          .single-view-wrapper {
+            display: contents;
+            --direction: row;
           }
-          
 
-          :host(:target) ::slotted(img), :host(:hover) ::slotted(img), :host(:focus) ::slotted(img)  {
-            position: absolute;
-            inset: 0;
-            /*z-index: -1;*/
-            filter: blur(1px) brightness(.4);
+
+          @media (orientation: portrait) {
+            .single-view-wrapper {
+              --direction: column;
+            }
+          }
+
+          @media (orientation: landscape) {
+            :host(:fullscreen) a {
+              flex-basis: 100%;
+            }
+          }
+
+          :host(:fullscreen) a {
+            flex-basis: -moz-available;
+          }
+
+          :host(:fullscreen) ::slotted(img) {
+            display: block;
+            margin: auto;
+          }
+
+          :host(:fullscreen) .single-view-wrapper {
+            display: flex;
+            flex-direction: var(--direction);
+            place-content: center;
+            height: 100%;
+          }
+
+
+          :host(:fullscreen)::backdrop {
+            background-color: transparent;
+            backdrop-filter: brightness(.6) blur(6px);
           }
         </style>
       `;
@@ -76,6 +106,13 @@ customElements.define(
           "error",
           (e) => {
             this.classList.add("missing-img");
+          },
+        ],
+        [
+          this,
+          "click",
+          (e) => {
+            this.requestFullscreen();
           },
         ],
       ];
