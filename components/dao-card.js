@@ -23,7 +23,7 @@ customElements.define(
       this.shadowRoot.innerHTML = /*html*/ `
         <div class="card-wrapper">
           <a href="#${this.id}" class="card" part="card">
-            <div class="content border" part="content">
+            <div class="content" part="content">
               <header>
                 <slot name="title"></slot>
                 <slot name="description"></slot>
@@ -36,6 +36,10 @@ customElements.define(
         </div>
 
         <style>
+          :host {
+            position: relative;
+          }
+
           .card-wrapper {
             position: absolute;
             top: 50%;
@@ -62,30 +66,21 @@ customElements.define(
             width: 80%;
           }
 
-          .border {
-            transform: translateZ(50px);
-            transform-style: preserve-3d;
-          }
-
-          :host {
-            position: relative;
-          }
-
           .content {
             display: none;
             --padding: 7%;
             max-height: calc(100% - var(--padding) - 1%);
-            overflow-y: auto;
             padding: var(--padding);
             position: absolute;
             inset: 0;
+            transform: translateZ(50px);
+            transform-style: preserve-3d;
           }
 
           ::slotted(img) {
             height: 100%;
             object-fit: cover;
           }
-
 
           .card-wrapper {
             display: contents;

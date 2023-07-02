@@ -30,9 +30,16 @@ img {
   max-width: 100%;
 }
 
+/* Utilities */
+
 .hidden {
   display: none;
 }
+
+.text-center {
+  text-align: center;
+}
+
 
 
 @font-face {

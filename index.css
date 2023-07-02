@@ -72,11 +72,11 @@ dao-card:fullscreen {
   padding: 5%;
 }
 
-dao-card.show-info::part(content) {
+dao-card:fullscreen.show-info::part(content) {
   display: block;
 }
 
-dao-card.show-info::part(card)::after {
+dao-card:fullscreen.show-info::part(card)::after {
   display: block;
   content: "";
   position: absolute;
@@ -119,4 +119,11 @@ dao-card.show-info::part(card)::after {
 #filters input:checked ~ span {
   color: var(--fg-color-1);
   filter: drop-shadow(0px 0px 11px white);
+}
+
+
+
+/* More info */
+#moreInfo {
+  margin-block-start: 3em;
 }
