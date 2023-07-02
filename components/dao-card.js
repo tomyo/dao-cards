@@ -148,7 +148,7 @@ customElements.define(
           "click",
           (e) => {
             if (!document.fullscreenElement) {
-              return this.requestFullscreen();
+              this.requestFullscreen();
             }
             this.classList.toggle("show-info");
 
