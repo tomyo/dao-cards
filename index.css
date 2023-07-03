@@ -134,4 +134,5 @@ dao-card.show-info::part(card)::after {
 /* More info */
 #moreInfo {
   margin-block-start: 3rem;
+  max-width: 120ch;
 }
