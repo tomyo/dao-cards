@@ -21,6 +21,7 @@ customElements.define(
 
     renderShadow() {
       this.shadowRoot.innerHTML = /*html*/ `
+        <button onclick="document.exitFullscreen()" class="close-button"></button>
         <div class="card-wrapper">
           <a href="#${this.id}" class="card" part="card">
             <div class="content" part="content">
@@ -38,6 +39,11 @@ customElements.define(
         <style>
           :host {
             position: relative;
+
+            --close-button-color: white;
+            --close-button-bottom: 4vw;
+            --close-button-width: 40px;
+            --close-button-line-height: 3px;
           }
 
           .card-wrapper {
@@ -108,6 +114,16 @@ customElements.define(
             }
           }
 
+          .close-button {
+            display: none;
+          }
+
+          :host(:fullscreen) .close-button {
+            display: block;
+            position: fixed;
+            top: 1em;
+          }
+
           :host(:fullscreen) a {
             flex-basis: -moz-available;
           }
@@ -128,6 +144,51 @@ customElements.define(
             background-color: transparent;
             backdrop-filter: brightness(.6) blur(6px);
           }
+          
+
+          /* Default close-button styles */
+          .close-button {
+            width: var(--close-button-width);
+            aspect-ratio: 1/1;
+            position: relative;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+          }
+
+          .close-button::before, .close-button::after{
+            content: "";
+            position: absolute;
+            width: 100%;  
+            height: var(--close-button-line-height);
+            top: calc(50% - var(--close-button-line-height) / 2);
+            left: 0;
+            background-color: var(--close-button-color);
+          }
+          .close-button::before {
+            transform: rotate(45deg);
+          }
+
+          .close-button::after {
+            transform: rotate(-45deg);
+          }
+
+          @media (hover: hover) {
+            /* We can hover (probably not a touch device) */
+            slot:not([name]) {
+              cursor: move;
+            }
+            .close-button {
+              opacity: 0.65;
+            }
+
+            .close-button:hover {
+              opacity: 1;
+            }
+          }
+
         </style>
       `;
     }
