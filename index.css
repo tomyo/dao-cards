@@ -55,6 +55,7 @@ dao-card {
   flex-basis: var(--card-width);
   flex-shrink: 0;
   height: calc(var(--card-width) / var(--card-aspect-ratio));
+  aspect-ratio: var(--card-aspect-ratio);
 }
 
 dao-card.missing-img {

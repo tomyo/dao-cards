@@ -53,6 +53,8 @@ customElements.define(
             height: 100%;
             transform-style: preserve-3d;
             backface-visibility: hidden;
+            display: inline-block;
+            border-radius: 20px;
           }
 
           .card header {
