@@ -270,18 +270,20 @@
     if (document.fullscreenElement != target) {
       document.exitFullscreen();
     }
-
   });
 
 
+  let lastFullscreenCard = null;
   window.addEventListener('fullscreenchange', (e) => {
     if (!document.fullscreenElement) {
       rotateElement = (x, y) => { };
+      lastFullscreenCard?.removeAttribute('style');
       return;
     }
 
+
+    const card = lastFullscreenCard = document.fullscreenElement.shadowRoot.querySelector(".card");
     rotateElement = (x, y) => {
-      const card = document.fullscreenElement.shadowRoot.querySelector(".card");
       card.style.transform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
       card.style.webkitTransform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
     }
