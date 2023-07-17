@@ -404,24 +404,6 @@
     });
   });
 
-  window.addEventListener('hashchange', (e) => {
-    if (!document.fullscreenElement) return;
-
-    const oldHash = decodeURI(new URL(e.oldURL).hash);
-    const newHash = decodeURI(new URL(e.newURL).hash);
-
-    console.debug(`hash changed ${oldHash} -> ${newHash}`);
-    if (!newHash) {
-      document.exitFullscreen();
-      return e.preventDefault();
-    }
-
-    const target = document.querySelector(newHash);
-
-    if (document.fullscreenElement != target) {
-      document.exitFullscreen();
-    }
-  });
 
 
   let lastFullscreenCard = null;
@@ -435,8 +417,8 @@
 
     const card = lastFullscreenCard = document.fullscreenElement.shadowRoot.querySelector(".card");
     rotateElement = (x, y) => {
-      x = Math.min(Math.max(x, -11), 11);
-      y = Math.min(Math.max(y, -11), 11);
+      x = x / 10; // Smooth rotation
+      y = y / 10; // Smooth rotation
       card.style.transform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
       card.style.webkitTransform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
     }

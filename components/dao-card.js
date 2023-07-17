@@ -49,10 +49,10 @@ customElements.define(
           <button class="card" part="card">
             <div class="rank-suit">
               <div>
-                <span class="rank">${rank}</span><span class="suit">${suit}</span>
+                <span class="rank">${rank}</span><br/><span class="suit">${suit}</span>
               </div>
               <div>
-                <span class="rank">${rank}</span><span class="suit">${suit}</span>
+                <span class="rank">${rank}</span><br/><span class="suit">${suit}</span>
               </div>
             </div>
             <div class="summary">
@@ -73,17 +73,29 @@ customElements.define(
 
         <style>
           :host {
-            position: relative;
-
+            --base-font-size: clamp(1rem, 9vw, 1.5rem);
             --card-color: ${rankSuiteColor};
             --border-radius: 20px;
             --close-button-color: white;
             --close-button-bottom: 4vw;
             --close-button-width: 40px;
             --close-button-line-height: 3px;
+            position: relative;
           }
           :host(.show-info)  .summary :last-child {
             visibility: hidden;
+          }
+
+          :host(.show-info) .content {
+            display: block;
+          }
+          :host(.show-info) .card::after {
+            display: block;
+            content: "";
+            position: absolute;
+            inset: 0rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: var(--card-border-radius);
           }
 
           .card-wrapper {
@@ -108,12 +120,12 @@ customElements.define(
           .card .summary {
             position: absolute;
             inset: 0;
-            padding: calc(10% + 1ch) calc(14%) calc(10%) ;
+            padding: calc(10% + 1ch) calc(14%) calc(14%) ;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             color: var(--card-color);
-            font-size: 1.4rem;
+            font-size: clamp(1.3rem, 5vw, 1.5rem);
           }
 
           .card .summary :first-child {
@@ -129,34 +141,32 @@ customElements.define(
           .rank-suit {
             position: absolute;
             inset: 0;
-            padding: 10%;
-            font-size: 2rem;
+            padding: 14% 10%;
+            font-size: clamp(2rem, 9vw, 3rem);
             font-family: "Hind";
             font-weight: 600;
             color: var(--card-color);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            text-orientation: upright;
+            align-items: start;
+            line-height: .9;
           }
 
-          .rank-suit > * {
-            writing-mode: vertical-lr;
-          }
 
           .rank-suit .rank {
             margin-block: -1rem;
-            font-size: 3.5rem;
-            writing-mode: initial;
           }
 
           .rank-suit .suit {
             font-family: "Dejavu Sans";
             font-weight: 600;
+            font-size: .8em;
           }
 
           .rank-suit > :last-child {
             transform: rotate(180deg);
+            align-self: end;
           }
 
           .card header {
@@ -280,8 +290,7 @@ customElements.define(
     }
 
     addEventListeners() {
-      let toggled = false;
-      const a = this.shadowRoot.querySelector("a");
+      const card = this.shadowRoot.querySelector(".card");
 
       this.handlers = [
         [
@@ -299,7 +308,9 @@ customElements.define(
             if (!document.fullscreenElement) {
               this.requestFullscreen();
             }
-            this.classList.toggle("show-info");
+            if (e.composedPath().includes(card)) {
+              this.classList.toggle("show-info");
+            }
           },
         ],
       ];
