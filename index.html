@@ -435,6 +435,8 @@
 
     const card = lastFullscreenCard = document.fullscreenElement.shadowRoot.querySelector(".card");
     rotateElement = (x, y) => {
+      x = Math.min(Math.max(x, -11), 11);
+      y = Math.min(Math.max(y, -11), 11);
       card.style.transform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
       card.style.webkitTransform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
     }
