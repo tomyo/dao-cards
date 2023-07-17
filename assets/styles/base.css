@@ -7,6 +7,7 @@
   --fg-color-1: hsl(57, 24%, 82%);
   --ff-0: Hind, sans-serif;
   --ff-1: Montserrat, sans-serif;
+  font-size: .9rem;
 }
 
 body {
@@ -38,6 +39,13 @@ img {
 
 .text-center {
   text-align: center;
+}
+
+
+@media (min-width: 500px) {
+  :root {
+    font-size: initial;
+  }
 }
 
 

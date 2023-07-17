@@ -82,6 +82,9 @@ customElements.define(
             --close-button-width: 40px;
             --close-button-line-height: 3px;
           }
+          :host(.show-info)  .summary :last-child {
+            visibility: hidden;
+          }
 
           .card-wrapper {
             position: absolute;
@@ -142,7 +145,7 @@ customElements.define(
           }
 
           .rank-suit .rank {
-            margin-block-end: -1rem;
+            margin-block: -1rem;
             font-size: 3.5rem;
             writing-mode: initial;
           }
@@ -293,9 +296,9 @@ customElements.define(
           this,
           "click",
           (e) => {
-            // if (!document.fullscreenElement) {
-            //   this.requestFullscreen();
-            // }
+            if (!document.fullscreenElement) {
+              this.requestFullscreen();
+            }
             this.classList.toggle("show-info");
           },
         ],

@@ -88,7 +88,7 @@ dao-card.show-info::part(card)::after {
   display: block;
   content: "";
   position: absolute;
-  inset: 1rem;
+  inset: 0rem;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: var(--card-border-radius);
 }
