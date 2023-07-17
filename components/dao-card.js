@@ -142,8 +142,9 @@ customElements.define(
           }
 
           .rank-suit .rank {
-            margin-inline-end: -2.7rem;
+            margin-block-end: -1rem;
             font-size: 3.5rem;
+            writing-mode: initial;
           }
 
           .rank-suit .suit {
