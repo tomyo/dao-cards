@@ -52,6 +52,7 @@ snap-carousel {
 /* Card */
 
 dao-card {
+  --border-radius:  var(--card-border-radius);
   flex-basis: var(--card-width);
   flex-shrink: 0;
   height: calc(var(--card-width) / var(--card-aspect-ratio));
@@ -62,7 +63,7 @@ dao-card.missing-img {
   display: none;
 }
 
-dao-card, dao-card>img {
+dao-card img {
   border-radius: var(--card-border-radius);
 }
 
@@ -73,7 +74,6 @@ dao-card [slot="title"] {
 dao-card [slot="description"] {
   color: var(--fg-color-1);
 }
-
 
 
 dao-card:fullscreen {
@@ -88,7 +88,7 @@ dao-card.show-info::part(card)::after {
   display: block;
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 1rem;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: var(--card-border-radius);
 }

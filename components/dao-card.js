@@ -19,27 +19,64 @@ customElements.define(
       this.removeEventListeners();
     }
 
+    getElement() {
+      switch (this.dataset.suit) {
+        case "♠":
+          return "Strategy";
+        case "♣":
+          return "Coordination";
+        case "♥":
+          return "Incentive";
+        case "♦":
+          return "Consensus";
+        default:
+          return "";
+      }
+    }
+
     renderShadow() {
+      const suit = this.dataset.suit || "";
+      const rank = this.dataset.rank || "";
+      const element = this.getElement();
+      const title = this.dataset.title || "";
+      const rankSuiteColor = ["♣", "♠"].includes(suit)
+        ? "black"
+        : "hsl(359, 84%, 53%)"; // Red
+
       this.shadowRoot.innerHTML = /*html*/ `
         <button onclick="document.exitFullscreen()" class="close-button"></button>
         <div class="card-wrapper">
-          <a href="#${this.id}" class="card" part="card">
+          <button class="card" part="card">
+            <div class="rank-suit">
+              <div>
+                <span class="rank">${rank}</span><span class="suit">${suit}</span>
+              </div>
+              <div>
+                <span class="rank">${rank}</span><span class="suit">${suit}</span>
+              </div>
+            </div>
+            <div class="summary">
+              <span>${element}</span>
+              <span>${title}</span>
+            </div>
             <div class="content" part="content">
               <header>
-                <slot name="title"></slot>
+                <h2>${title}</h2>
                 <slot name="description"></slot>
               </header>
             </div>
             <slot>
-              <!-- image expected into default slot -->
+            <!-- image expected into default slot -->
             </slot>
-          </a>
+          </button>
         </div>
 
         <style>
           :host {
             position: relative;
 
+            --card-color: ${rankSuiteColor};
+            --border-radius: 20px;
             --close-button-color: white;
             --close-button-bottom: 4vw;
             --close-button-width: 40px;
@@ -60,7 +97,62 @@ customElements.define(
             transform-style: preserve-3d;
             backface-visibility: hidden;
             display: inline-block;
-            border-radius: 20px;
+            border-radius: var(--border-radius);
+            border: none;
+            padding: 0;
+          }
+
+          .card .summary {
+            position: absolute;
+            inset: 0;
+            padding: calc(10% + 1ch) calc(14%) calc(10%) ;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: var(--card-color);
+            font-size: 1.4rem;
+          }
+
+          .card .summary :first-child {
+            align-self: end;
+          }
+
+          .card .summary :last-child {
+            align-self: start;
+            max-width: 80%;
+            text-align: start;
+          }
+
+          .rank-suit {
+            position: absolute;
+            inset: 0;
+            padding: 10%;
+            font-size: 2rem;
+            font-family: "Hind";
+            font-weight: 600;
+            color: var(--card-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-orientation: upright;
+          }
+
+          .rank-suit > * {
+            writing-mode: vertical-lr;
+          }
+
+          .rank-suit .rank {
+            margin-inline-end: -2.7rem;
+            font-size: 3.5rem;
+          }
+
+          .rank-suit .suit {
+            font-family: "Dejavu Sans";
+            font-weight: 600;
+          }
+
+          .rank-suit > :last-child {
+            transform: rotate(180deg);
           }
 
           .card header {
@@ -85,10 +177,6 @@ customElements.define(
             transform-style: preserve-3d;
           }
 
-          ::slotted(img) {
-            height: 100%;
-            object-fit: cover;
-          }
 
           .card-wrapper {
             display: contents;
@@ -128,10 +216,7 @@ customElements.define(
             flex-basis: -moz-available;
           }
 
-          :host(:fullscreen) ::slotted(img) {
-            display: block;
-            margin: auto;
-          }
+
 
           :host(:fullscreen) .card-wrapper {
             display: flex;
@@ -144,7 +229,7 @@ customElements.define(
             background-color: transparent;
             backdrop-filter: brightness(.6) blur(6px);
           }
-          
+
 
           /* Default close-button styles */
           .close-button {
@@ -161,7 +246,7 @@ customElements.define(
           .close-button::before, .close-button::after{
             content: "";
             position: absolute;
-            width: 100%;  
+            width: 100%;
             height: var(--close-button-line-height);
             top: calc(50% - var(--close-button-line-height) / 2);
             left: 0;
@@ -177,9 +262,6 @@ customElements.define(
 
           @media (hover: hover) {
             /* We can hover (probably not a touch device) */
-            slot:not([name]) {
-              cursor: move;
-            }
             .close-button {
               opacity: 0.65;
             }
@@ -210,19 +292,10 @@ customElements.define(
           this,
           "click",
           (e) => {
-            if (!document.fullscreenElement) {
-              this.requestFullscreen();
-            }
+            // if (!document.fullscreenElement) {
+            //   this.requestFullscreen();
+            // }
             this.classList.toggle("show-info");
-
-            const href = a.getAttribute("href");
-
-            if (toggled) {
-              a.href = href == "#" ? `#${this.id}` : "#";
-              history.replaceState(null, null, a.href);
-            }
-
-            if (href == "#") toggled = true;
           },
         ],
       ];
