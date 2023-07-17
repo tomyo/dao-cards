@@ -126,6 +126,8 @@ customElements.define(
             justify-content: space-between;
             color: var(--card-color);
             font-size: clamp(1.3rem, 5vw, 1.5rem);
+            transform: translateZ(45px);
+            webkit-transform: translateZ(45px);
           }
 
           .card .summary :first-child {
@@ -151,6 +153,8 @@ customElements.define(
             justify-content: space-between;
             align-items: start;
             line-height: .9;
+            transform: translateZ(45px);
+            webkit-transform: translateZ(45px);
           }
 
 
@@ -188,7 +192,9 @@ customElements.define(
             position: absolute;
             inset: 0;
             transform: translateZ(50px);
+            webkit-transform: translateZ(50px);
             transform-style: preserve-3d;
+            webkit-transform-style: preserve-3d;
           }
 
 
