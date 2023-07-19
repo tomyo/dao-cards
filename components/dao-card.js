@@ -229,7 +229,6 @@ customElements.define(
           :host(:fullscreen) .close-button {
             display: block;
             position: fixed;
-            top: 1em;
           }
 
           :host(:fullscreen) a {
