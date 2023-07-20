@@ -76,10 +76,7 @@ customElements.define(
             --base-font-size: clamp(1rem, 9vw, 1.5rem);
             --card-color: ${rankSuiteColor};
             --border-radius: 20px;
-            --close-button-color: white;
-            --close-button-bottom: 4vw;
-            --close-button-width: 40px;
-            --close-button-line-height: 3px;
+
             position: relative;
           }
           :host(.show-info)  .summary :last-child {
@@ -89,6 +86,7 @@ customElements.define(
           :host(.show-info) .content {
             display: block;
           }
+
           :host(.show-info) .card::after {
             display: block;
             content: "";
@@ -103,7 +101,6 @@ customElements.define(
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            perspective: 400px;
           }
 
           .card {
@@ -126,8 +123,8 @@ customElements.define(
             justify-content: space-between;
             color: var(--card-color);
             font-size: clamp(1.3rem, 5vw, 1.5rem);
-            transform: translateZ(45px);
-            webkit-transform: translateZ(45px);
+            transform: translateZ(20px);
+            webkit-transform: translateZ(20px);
           }
 
           .card .summary :first-child {
@@ -153,8 +150,8 @@ customElements.define(
             justify-content: space-between;
             align-items: start;
             line-height: .9;
-            transform: translateZ(45px);
-            webkit-transform: translateZ(45px);
+            transform: translateZ(25px);
+            webkit-transform: translateZ(25px);
           }
 
 
@@ -179,8 +176,6 @@ customElements.define(
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            perspective: 400px;
-            transform-style: preserve-3d;
             width: 80%;
           }
 
@@ -216,50 +211,24 @@ customElements.define(
               --direction: column;
               height: 75%;
             }
-
-            :host(:fullscreen) a {
-              flex-basis: 100%;
-            }
           }
 
           .close-button {
+            --close-button-line-height: 3px;
+            --close-button-color: white;
+
             display: none;
-          }
-
-          :host(:fullscreen) .close-button {
-            display: block;
-            position: fixed;
-          }
-
-          :host(:fullscreen) a {
-            flex-basis: -moz-available;
-          }
-
-
-
-          :host(:fullscreen) .card-wrapper {
-            display: flex;
-            flex-direction: var(--direction);
-            place-content: center;
-          }
-
-
-          :host(:fullscreen)::backdrop {
-            background-color: transparent;
-            backdrop-filter: brightness(.6) blur(6px);
-          }
-
-
-          /* Default close-button styles */
-          .close-button {
-            width: var(--close-button-width);
+            width: 40px;
             aspect-ratio: 1/1;
-            position: relative;
+            position: absolute;
             background-color: transparent;
             border: none;
             padding: 0;
             margin: 0;
             cursor: pointer;
+            left: 50%;
+            bottom: 8vmin;
+            transform: translateX(-50%);
           }
 
           .close-button::before, .close-button::after{
@@ -290,6 +259,24 @@ customElements.define(
             }
           }
 
+          /* Fullscreen styles */
+          :host(:fullscreen) .close-button {
+            display: block;
+          }
+
+
+          :host(:fullscreen) .card-wrapper {
+            display: flex;
+            flex-direction: var(--direction);
+            place-content: center;
+          }
+
+
+          :host(:fullscreen)::backdrop {
+            background-color: transparent;
+            backdrop-filter: brightness(.6) blur(6px);
+          }
+
         </style>
       `;
     }
@@ -299,23 +286,19 @@ customElements.define(
 
       this.handlers = [
         [
-          // Hide cards when image fails to load
-          this.querySelector("img"),
-          "error",
-          (e) => {
-            this.classList.add("missing-img");
-          },
-        ],
-        [
           this,
           "click",
           (e) => {
-            if (!document.fullscreenElement) {
-              this.requestFullscreen();
-            }
-            if (e.composedPath().includes(card)) {
-              this.classList.toggle("show-info");
-            }
+            const allowFullscreen = window.innerWidth < 500;
+            const clickedOnCard = e.composedPath().includes(card);
+
+            if (clickedOnCard) this.classList.toggle("show-info");
+
+            if (document.fullscreenElement && !clickedOnCard)
+              return document.exitFullscreen();
+
+            if (!document.fullscreenElement && allowFullscreen)
+              return this.requestFullscreen();
           },
         ],
       ];
