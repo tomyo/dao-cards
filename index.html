@@ -478,43 +478,51 @@
     });
   });
 
-
-
-  let lastFullscreenCard = null;
-  window.addEventListener('fullscreenchange', (e) => {
-    if (!document.fullscreenElement) {
-      rotateElement = (x, y) => { };
-      lastFullscreenCard?.removeAttribute('style');
-      return;
-    }
-
-
-    const card = lastFullscreenCard = document.fullscreenElement.shadowRoot.querySelector(".card");
-    rotateElement = (x, y) => {
-      x = x / 5; // Smooth rotation
-      y = y / 5; // Smooth rotation
-      card.style.transform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
-      card.style.webkitTransform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
-    }
-  });
-
-
-  let rotateElement = (x, y) => { };
-
   window.addEventListener('deviceorientation', function (event) {
-    if (!document.fullscreenElement) return;
-
     if (screen.orientation.angle == 90)
-      return rotateElement(55 + event.gamma, event.beta);
+      return rotateElements(55 + event.gamma, event.beta, { smoothness: 5 });
 
-    rotateElement(55 - event.beta, event.gamma);
+    rotateElements(55 - event.beta, event.gamma, { smoothness: 5 });
 
   });
 
   window.addEventListener('mousemove', function (e) {
-    if (!document.fullscreenElement) return;
-
-    rotateElement(-((45 * (e.y - window.innerHeight / 2)) / window.innerHeight / 2),
+    rotateElements(
+      -((45 * (e.y - window.innerHeight / 2)) / window.innerHeight / 2),
       (45 * (e.x - window.innerWidth / 2)) / window.innerWidth / 2);
+  });
+
+  function rotateElements(x, y, { smoothness = 1.5, shadowSelector = ".card" } = {}) {
+    visibleCards.forEach((card) => {
+      if (card.shadowRoot) card = card.shadowRoot.querySelector(shadowSelector)
+      card.style.transform = `rotateX(${x / smoothness}deg) rotateY(${y / smoothness}deg)`;
+      card.style.webkitTransform = "rotateX(" + x / smoothness + "deg) rotateY(" + y / smoothness + "deg)";
+    })
+  }
+
+
+  // Cards observer //
+
+  const visibleCards = new Set();
+
+  function updateObservedCards(entries, observer) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visibleCards.add(entry.target);
+      } else {
+        visibleCards.delete(entry.target);
+      }
+    });
+  }
+
+
+  const cardsObserver = new IntersectionObserver(updateObservedCards, {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0,
+  });
+
+  document.querySelectorAll('dao-card').forEach(card => {
+    cardsObserver.observe(card);
   });
 </script>
